@@ -7,7 +7,7 @@ const galleryEl = document.querySelector('.gallery');
 let currentPage = 1;
 
 inputEl.addEventListener('submit', onSubmit);
-
+// 
 // Делаем запрос пользователя с данным ID
 fetchItems(){
     const response = axios.get(`https://pixabay.com/api/?key=${API_KEY}&q=${item}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${currentPage}`)
