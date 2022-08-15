@@ -9,8 +9,8 @@ let currentPage = 1;
 inputEl.addEventListener('submit', onSubmit);
 // 
 // Делаем запрос пользователя с данным ID
-fetchItems(){
-    const response = axios.get(`https://pixabay.com/api/?key=${API_KEY}&q=${item}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${currentPage}`)
+// fetchItems(){
+    // const response = axios.get(`https://pixabay.com/api/?key=${API_KEY}&q=${item}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${currentPage}`)
         // .then(function (response) {
         //     // обработка успешного запроса
         //     console.log(response);
@@ -19,8 +19,8 @@ fetchItems(){
         //     // обработка ошибки
         //     console.log(error);
         // });
-    return response.data;
-}
+    // return response.data;
+// }
 
 function onSubmit(event) {
     event.preventDefault();
