@@ -3,6 +3,10 @@
 const API_KEY = '29274974-75b7ad93639b97858ba53233b';
 const axios = require('axios');
 import Notiflix from 'notiflix';
+// Описан в документации
+import SimpleLightbox from "simplelightbox";
+// Дополнительный импорт стилей
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 const inputEl = document.querySelector('input');
 const galleryEl = document.querySelector('.gallery');
@@ -12,7 +16,11 @@ const buttonLoadMore = document.querySelector('.load-more');
 let currentPage = 1;
 let perPage = 40;
 let item = inputEl.value;
-
+let lightbox = new SimpleLightbox('.gallery a',{captions: true,
+    captionSelector: 'img',
+    captionsData: 'alt',
+    captionPosition: 'bottom',
+    captionDelay: 250,})
 
 buttonLoadMore.classList.add('is-hidden')
 
@@ -46,7 +54,8 @@ function onSubmit(event) {
 
     item = inputEl.value;
     item;
-    console.log(item);
+    // console.log(item);
+    // При поиске по новому ключевому слову значение page надо вернуть в исходное, так как будет пагинация по новой коллекции изображений.
     currentPage = 1;
 
     fetchItems()   
@@ -59,7 +68,9 @@ function onSubmit(event) {
 function createOneItem(image) {
 
     return `<div class="photo-card">
+    <a href="${image.largeImageURL}">
   <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" width ="215" />
+  </a>
   <div class="info">
     <p class="info-item">
       <b>Likes ${image.likes}</b>
@@ -74,7 +85,7 @@ function createOneItem(image) {
       <b>Downloads ${image.downloads}</b>
     </p>
   </div>
-</div>`
+  </div>`
 }
 
 function showOneItem(dataImages) {
@@ -85,8 +96,10 @@ function showOneItem(dataImages) {
 function showResult(dataImages) {
 
     galleryEl.insertAdjacentHTML('beforeend', showOneItem(dataImages))   
+    // После первого запроса кнопка появляется в интерфейсе под галереей.
     buttonLoadMore.classList.remove('is-hidden');
     onResult(dataImages);
+    lightbox.refresh();
 }
 
 function onLoadMore() {
@@ -104,11 +117,13 @@ function onResult(dataImages) {
 
     if (dataImages.length > 0 && dataImages.length < perPage) {
     buttonLoadMore.classList.add('is-hidden')
-   
-    Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
+    // Если пользователь дошел до конца коллекции, пряч кнопку и выводи уведомление с текстом "We're sorry, but you've reached the end of search results."
+        Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.");
+        
     } else if 
         (dataImages.length === 0){
         buttonLoadMore.classList.add('is-hidden')
+       
     }
     
 }
