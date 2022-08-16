@@ -1,38 +1,91 @@
+// Добавить notiflix!!
+// Добавить оформление!
+
 const API_KEY = '29274974-75b7ad93639b97858ba53233b';
 const axios = require('axios');
+import Notiflix from 'notiflix';
 
 const inputEl = document.querySelector('input');
 const galleryEl = document.querySelector('.gallery');
+const formEL = document.querySelector('.search-form')
 
 let currentPage = 1;
+let item = inputEl.value;
 
-inputEl.addEventListener('submit', onSubmit);
-// 
+
+formEL.addEventListener('submit', onSubmit);
+
 // Делаем запрос пользователя с данным ID
-// fetchItems(){
-    // const response = axios.get(`https://pixabay.com/api/?key=${API_KEY}&q=${item}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${currentPage}`)
-        // .then(function (response) {
-        //     // обработка успешного запроса
-        //     console.log(response);
-        // })
-        // .catch(function (error) {
-        //     // обработка ошибки
-        //     console.log(error);
-        // });
-    // return response.data;
+async function fetchItems() {
+    try {
+    const response = await axios.get(`https://pixabay.com/api/?key=${API_KEY}&q=${item}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${currentPage}`)
+        const dataImages = await response.data.hits;
+// Если бэкенд возвращает пустой массив, значит ничего подходящего найдено небыло. В таком случае показывай уведомление с текстом "Sorry, there are no images matching your search query. Please try again.".
+        if (dataImages.length === 0) {
+            Notiflix.Notify.info("Sorry, there are no images matching your search query. Please try again.")
+        }
+//         return {dataImages,
+//     totalHits: response.data.totalHits,
 // }
+        return dataImages
+    }
+            catch (error) {
+            console.log(error);
+        };
+    
+}
+
 
 function onSubmit(event) {
     event.preventDefault();
-    const item = inputEl.value;
-    showResult(item);
+    
+    // При поиске по новому ключевому слову необходимо полностью очищать содержимое галереи, чтобы не смешивать результаты.
+    galleryEl.innerHTML = "";
+
+    item = inputEl.value;
+    item;
+console.log(item);
+    fetchItems()
+        .then(images => { showResult(images); })
+        .catch(error => (console.log(error)))
+    
+    
 }
 
-// const url = `https://pixabay.com/api/?key=${API_KEY}&q=${}&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=${}`
+
+
+function createOneItem(image) {
+    return `<div class="photo-card">
+  <img src="${image.webformatURL}" alt="${image.tags}" loading="lazy" />
+  <div class="info">
+    <p class="info-item">
+      <b>Likes ${image.likes}</b>
+    </p>
+    <p class="info-item">
+      <b>Views ${image.views}</b>
+    </p>
+    <p class="info-item">
+      <b>Comments ${image.comments}</b>
+    </p>
+    <p class="info-item">
+      <b>Downloads ${image.downloads}</b>
+    </p>
+  </div>
+</div>`
+}
+
+function showOneItem(dataImages) {
+    return dataImages.reduce((acc,image) =>acc +createOneItem(image),"")
+}
+function showResult(dataImages) {
+galleryEl.insertAdjacentHTML('beforeend',showOneItem(dataImages))
+}
+
+//  fetch(`https://pixabay.com/api/?key=${API_KEY}&q=cat&image_type=photo&orientation=horizontal&safesearch=true&per_page=40&page=1`)
 
 
 
-
+// Notiflix.Notify.warning("We're sorry, but you've reached the end of search results.")
 
 
 
