@@ -8,14 +8,16 @@
     <link rel="stylesheet" href="sass/index.scss">
   </head>
   <body>
+    <div class="container">
     <form class="search-form" id="search-form">
       <input type="text" name="searchQuery" autocomplete="off" placeholder="Search images..." />
-      <button type="submit">Search</button>
+      <button type="submit" class="btn-search">Search</button>
+      </form>
       <div class="gallery">
         <!-- Карточки изображений -->
       </div>
-    </form>
-    <button type="button" class="load-more">Load more</button>
+        <button type="button" class="load-more">Load more</button>
     <script src="index.js" type="module"></script>
+    </div>
   </body>
 </html>
